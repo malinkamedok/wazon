@@ -22,4 +22,7 @@ jobs:
       - name: Generate config
         run: bash .github/scripts/generate-lint-config.sh
       - name: Run golangci-lint
-        run: golangci-lint run --config ./.github/workflows/lint-config.yml
+        run: |
+          for dir in $(find . -name "go.mod" -exec dirname {} \; | sort -u); do
+            cd $dir && golangci-lint run --fix
+          done
