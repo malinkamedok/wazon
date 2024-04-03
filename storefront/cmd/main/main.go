@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
-	Println("Hello from storefront  service!")
+	fmt.Println("Hello from storefront  service!")
 }
