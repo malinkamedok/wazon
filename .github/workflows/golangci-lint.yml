@@ -18,9 +18,8 @@ jobs:
           go-version: '1.22'
           cache: false
       - name: Install golangci-lint
-        uses: golangci/golangci-lint-action@v4
-        with:
-          version: v1.57.1
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.57.1
       - name: Find Go modules and run golangci-lint
         run: |
           for dir in $(find . -name 'go.mod' -exec dirname {} \;); do
