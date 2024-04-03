@@ -22,4 +22,4 @@ jobs:
       - name: Generate config
         run: bash .github/scripts/generate-lint-config.sh
       - name: Run golangci-lint
-        run: bash golangci-lint run --config ./.github/workflows/lint-config.yml
+        run: golangci-lint run --config ./.github/workflows/lint-config.yml
