@@ -23,6 +23,6 @@ jobs:
         run: bash .github/scripts/generate-lint-config.sh
       - name: Run golangci-lint
         run: |
-          for dir in $(find . -name "go.mod" -exec dirname {} \; | sort -u); do
+          for dir in $(find . -name "go.mod" -exec dirname {} \; | sort -u | xargs -I {} realpath {}); do
             cd $dir && golangci-lint run --fix
           done
