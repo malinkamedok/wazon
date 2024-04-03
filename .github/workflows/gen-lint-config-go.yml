@@ -1,0 +1,25 @@
+name: Generate Lint Config
+on:
+  push:
+  pull_request:
+
+jobs:
+  generate-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate lint config
+        run: bash .github/scripts/generate-lint-config.sh
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Run lint
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const fs = require('fs');
+            const path = '.github/workflows/lint-config.yml';
+            const config = fs.readFileSync(path, 'utf8');
+            fs.writeFileSync(path, config.replace('name: golangci-lint', 'name: golangci-lint-generated'));
+            console.log(`Generated lint config: ${path}`);

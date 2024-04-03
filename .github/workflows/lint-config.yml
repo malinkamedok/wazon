@@ -1,15 +1,15 @@
 name: golangci-lint
 on:
-  push:
-  pull_request:
+ push:
+ pull_request:
 
 permissions:
-  contents: read
-  pull-requests: read
+ contents: read
+ pull-requests: read
 
 jobs:
-  golangci:
-    name: lint
+ lint-storefront:
+    name: lint in ./storefront
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,3 +21,5 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.57.1
+          working-directory: ./storefront
+
