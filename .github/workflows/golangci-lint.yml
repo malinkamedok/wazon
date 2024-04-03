@@ -19,6 +19,8 @@ jobs:
       - name: Detect Directory Changes
         id: detect
         uses: tchupp/actions-detect-directory-changes@v1
+      - name: Debug JSON output
+        run: echo "${{ needs.detect-directory-changes.outputs.changed }}"
   golangci:
     name: lint
     runs-on: ubuntu-latest
