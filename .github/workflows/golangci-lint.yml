@@ -21,7 +21,6 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.57.1
-          cache: true
       - name: Find Go modules and run golangci-lint
         run: |
           for dir in $(find . -name 'go.mod' -exec dirname {} \;); do
