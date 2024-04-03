@@ -36,4 +36,6 @@ for dir in $(find . -name "go.mod" -exec dirname {} \; | sort -u); do
  echo "          version: v1.57.1" >> $CONFIG_FILE
  echo "          working-directory: $dir" >> $CONFIG_FILE
  echo "" >> $CONFIG_FILE
+ # debug
+ echo "working-directory: $dir"
 done
