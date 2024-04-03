@@ -8,9 +8,23 @@ permissions:
   pull-requests: read
 
 jobs:
+  detect-directory-changes:
+    name: "Detect Directory Changes"
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Detect Directory Changes
+        id: detect
+        uses: tchupp/actions-detect-directory-changes@v1
   golangci:
     name: lint
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: ${{ fromJSON(needs.detect-directory-changes.outputs.changed) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -21,3 +35,4 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.57.1
+          working-directory: ./${{ matrix.project }}
