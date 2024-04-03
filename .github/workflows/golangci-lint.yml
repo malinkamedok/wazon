@@ -20,6 +20,8 @@ jobs:
       - name: Install golangci-lint
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.57.1
+      - name: Set execute permission
+        run: chmod +x $(go env GOPATH)/bin/golangci-lint
       - name: Generate config
         run: bash .github/scripts/generate-lint-config.sh
       - name: Run golangci-lint
