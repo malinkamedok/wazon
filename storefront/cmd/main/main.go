@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"storefront/internal/app"
+	"storefront/internal/config"
+)
 
 func main() {
-	fmt.Println("Hello from storefront  service!")
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app.Run(cfg)
 }
