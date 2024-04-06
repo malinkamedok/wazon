@@ -6,3 +6,6 @@ create table if not exists products (
     description text,
     price bigint not null check ( price >= 0 )
 );
+
+insert into products(name, description, price) values
+    ('aboba', 'ab', 1999);

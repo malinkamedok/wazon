@@ -51,6 +51,30 @@ func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList
 }
 
 func (p PostgresRepo) ReadProductByUUID(ctx context.Context, productUUID uuid.UUID) (entity.Product, error) {
-	//TODO implement me
-	panic("implement me")
+	query, _, err := p.Builder.Select("*").From("products").Where("id=?", productUUID).ToSql()
+	if err != nil {
+		log.Println("could not build query")
+		return entity.Product{}, err
+	}
+	rows, err := p.Pool.Query(ctx, query, productUUID)
+	if err != nil {
+		log.Println("could not execute query")
+		return entity.Product{}, err
+	}
+
+	var product entity.Product
+
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&product.UUID, &product.Name, &product.Description, &product.Price)
+		if err != nil {
+			log.Println("could not scan row")
+			return entity.Product{}, err
+		}
+	}
+	if rows.Err() != nil {
+		log.Println("could not read rows")
+		return entity.Product{}, err
+	}
+	return product, nil
 }
