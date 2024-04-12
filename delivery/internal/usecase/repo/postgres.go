@@ -7,8 +7,10 @@ import (
 	"delivery/pkg/postgres"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v4"
 )
 
 type PostgresRepo struct {
@@ -22,7 +24,7 @@ func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
 }
 
 func (p PostgresRepo) ReadAllOrders(ctx context.Context) ([]entity.OrderList, error) {
-	query, _, err := p.Builder.Select("id", "name").From("products").ToSql()
+	query, _, err := p.Builder.Select("id", "order_status").From("orders").ToSql()
 	if err != nil {
 		log.Println("could not build query")
 		return nil, err
@@ -52,20 +54,11 @@ func (p PostgresRepo) ReadAllOrders(ctx context.Context) ([]entity.OrderList, er
 	return products, nil
 }
 
-func (p PostgresRepo) ReadOrderByUUID(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error) {
-	query, _, err := p.Builder.Select("id", "status").From("orders").Where("id", "=", orderUUID).ToSql()
-
-	if err != nil {
-		log.Println("could not build query")
-		return entity.Order{}, err
-	}
-	rows, err := p.Pool.Query(ctx, query)
-	if err != nil {
-		log.Println("could not execute query")
-		return entity.Order{}, err
-	}
-	defer rows.Close()
+func ReadOneObjectFromRows(rows pgx.Rows) (entity.Order, error) {
 	var order entity.Order
+	var err error
+
+	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&order.UUID, &order.Status, &order.CreatedAt, &order.UpdatedAt)
 		if err != nil {
@@ -83,10 +76,57 @@ func (p PostgresRepo) ReadOrderByUUID(ctx context.Context, orderUUID uuid.UUID) 
 	return order, nil
 }
 
+func (p PostgresRepo) ReadOrderByUUID(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error) {
+	query, _, err := p.Builder.Select("*").From("orders").Where("id = $1").ToSql()
+
+	if err != nil {
+		log.Println("could not build query")
+		return entity.Order{}, err
+	}
+	rows, err := p.Pool.Query(ctx, query, orderUUID.String())
+	if err != nil {
+		log.Println("could not execute query")
+		return entity.Order{}, err
+	}
+
+	order, err := ReadOneObjectFromRows(rows)
+
+	return order, err
+}
+
 func (p *PostgresRepo) InsertOrder(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error) {
-	panic("unimplemented")
+	query, _, err := p.Builder.Insert("orders").Columns("id").Values(orderUUID.String()).Suffix("RETURNING *").ToSql()
+
+	if err != nil {
+		log.Println("could not build query")
+		return entity.Order{}, err
+	}
+	rows, err := p.Pool.Query(ctx, query, orderUUID.String())
+	if err != nil {
+		log.Println("could not insert into table")
+		return entity.Order{}, err
+	}
+
+	order, err := ReadOneObjectFromRows(rows)
+
+	return order, err
 }
 
 func (p *PostgresRepo) UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUID, Status entity.OrderStatus) (entity.Order, error) {
-	panic("unimplemented")
+	query, _, err := p.Builder.Update("orders").Set("order_status", Status).Set("updated_at", time.Now()).Where("id = $3", orderUUID).Suffix("RETURNING *").ToSql()
+
+	if err != nil {
+		log.Println("could not build query")
+		return entity.Order{}, err
+	}
+
+	rows, err := p.Pool.Query(ctx, query, Status, time.Now(), orderUUID.String())
+	if err != nil {
+		log.Println("could not update value")
+		return entity.Order{}, err
+	}
+
+	order, err := ReadOneObjectFromRows(rows)
+
+	return order, err
 }

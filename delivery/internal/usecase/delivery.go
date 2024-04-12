@@ -33,12 +33,18 @@ func (s DeliveryUseCase) GetOrderByUUID(ctx context.Context, orderUUID uuid.UUID
 	return order, nil
 }
 
-// CreateOrder implements DeliveryContract.
 func (s *DeliveryUseCase) CreateOrder(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error) {
-	panic("unimplemented")
+	order, err := s.repo.InsertOrder(ctx, orderUUID)
+	if err != nil {
+		return entity.Order{}, err
+	}
+	return order, nil
 }
 
-// UpdateOrderByUUID implements DeliveryContract.
 func (s *DeliveryUseCase) UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUID, Status entity.OrderStatus) (entity.Order, error) {
-	panic("unimplemented")
+	order, err := s.repo.UpdateOrderByUUID(ctx, orderUUID, Status)
+	if err != nil {
+		return entity.Order{}, err
+	}
+	return order, nil
 }

@@ -31,19 +31,48 @@
 
 > | name | type     | data type | example                                  | description                 |
 > |------|----------|-----------|------------------------------------------|-----------------------------|
-> | UUID | required | string    | `8d7b317b-db39-4751-b0a4-8efeafc0cacd`   | Version 4 UUID              |
+> | UUID | required | string    | `0d39d5a6-ca6d-4ef2-b477-621e1b37e526`   | Version 4 UUID              |
 
 
 ##### Example output
 
 ```json
 {
-    "8d7b317b-db39-4751-b0a4-8efeafc0cacd": {
-      "status": "delivery",
-      "created_at": 1712783228,
-      "updated_at": 1712784228
-    },
-    "service": "delivery"
+  "order": {
+    "uuid": "0d39d5a6-ca6d-4ef2-b477-621e1b37e526",
+    "order_status": "created",
+    "created_at": "2024-04-12T22:00:46.464337Z",
+    "updated_at": "2024-04-12T22:00:46.464337Z"
+  },
+  "service": "delivery"
+}
+```
+
+</details>
+
+#### Создание заказа
+
+<details>
+ <summary><code>GET</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>UUID</code> <code><b>/</b></code> <code>create</code> </summary>
+
+##### Parameters
+
+> | name | type     | data type | example                                  | description                 |
+> |------|----------|-----------|------------------------------------------|-----------------------------|
+> | UUID | required | string    | `0d39d5a6-ca6d-4ef2-b477-621e1b37e526`   | Version 4 UUID              |
+
+
+##### Example output
+
+```json
+{
+  "order": {
+    "uuid": "0d39d5a6-ca6d-4ef2-b477-621e1b37e526",
+    "order_status": "created",
+    "created_at": "2024-04-12T22:00:46.464337Z",
+    "updated_at": "2024-04-12T22:00:46.464337Z"
+  },
+  "service": "delivery"
 }
 ```
 
@@ -52,13 +81,13 @@
 #### Обновление статуса заказа
 
 <details>
- <summary><code>POST</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>UUID</code> <code><b>/</b></code> <code>edit</code></summary>
+ <summary><code>POST</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>edit</code></summary>
 
 ##### Parameters
 
 > | name | type     | data type | example                                  | description                 |
 > |------|----------|-----------|------------------------------------------|-----------------------------|
-> | UUID | required | string    | `8d7b317b-db39-4751-b0a4-8efeafc0cacd`   | Version 4 UUID              |
+> | UUID | required | string    | `0d39d5a6-ca6d-4ef2-b477-621e1b37e526`   | Version 4 UUID              |
 > | Status | optional | string    | `await`   | Status of order              |
 
 
@@ -67,12 +96,13 @@
 
 ```json
 {
-    "8d7b317b-db39-4751-b0a4-8efeafc0cacd": {
-      "status": "await",
-      "created_at": 1712783228,
-      "updated_at": 1712784437
-    },
-    "service": "delivery"
+  "order": {
+    "uuid": "0d39d5a6-ca6d-4ef2-b477-621e1b37e526",
+    "order_status": "created",
+    "created_at": "2024-04-12T22:00:46.464337Z",
+    "updated_at": "2024-04-12T22:21:21.32669Z"
+  },
+  "service": "delivery"
 }
 ```
 
