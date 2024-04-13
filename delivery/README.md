@@ -81,7 +81,7 @@
 #### Обновление статуса заказа
 
 <details>
- <summary><code>POST</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>edit</code></summary>
+ <summary><code>POST</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>update</code></summary>
 
 ##### Parameters
 

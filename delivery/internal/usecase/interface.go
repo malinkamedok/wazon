@@ -10,10 +10,10 @@ import (
 type (
 	DeliveryContract interface {
 		GetAllOrders(ctx context.Context) ([]entity.OrderList, error)
-		GetOrderByUUID(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error)
+		GetOrderByUUID(ctx context.Context, orderUUID string) (entity.Order, error)
 
-		CreateOrder(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error)
-		UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUID, Status entity.OrderStatus) (entity.Order, error)
+		CreateOrder(ctx context.Context, orderUUID string) (entity.Order, error)
+		UpdateOrderByUUID(ctx context.Context, orderUUID string, newStatus string) (entity.Order, error)
 	}
 
 	DeliveryRepository interface {
@@ -22,5 +22,7 @@ type (
 
 		InsertOrder(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error)
 		UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUID, Status entity.OrderStatus) (entity.Order, error)
+
+		CheckOrderExistance(ctx context.Context, orderUUID uuid.UUID) (bool, error)
 	}
 )
