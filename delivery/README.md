@@ -22,7 +22,7 @@
 
 </details>
 
-#### Получение подробной информации о конкретном продукте
+#### Получение подробной информации о конкретной доставке
 
 <details>
  <summary><code>GET</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>UUID</code></summary>
