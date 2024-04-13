@@ -27,3 +27,17 @@ services:
       POSTGRES_URL: ${WAZON_DB_URL}
     env_file:
       - .env
+  delivery:
+    build:
+      context: ./delivery
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - '8001:8001'
+    depends_on:
+      psql:
+        condition: service_started
+    environment:
+      POSTGRES_URL: ${WAZON_DB_URL}
+    env_file:
+      - .env
