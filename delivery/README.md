@@ -53,7 +53,7 @@
 #### Создание заказа
 
 <details>
- <summary><code>GET</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>UUID</code> <code><b>/</b></code> <code>create</code> </summary>
+ <summary><code>POST</code> <code><b>/</b></code> <code>delivery</code> <code><b>/</b></code> <code>create</code> </summary>
 
 ##### Parameters
 

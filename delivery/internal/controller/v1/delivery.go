@@ -37,7 +37,7 @@ func NewUserRoutes(r chi.Router, s usecase.DeliveryContract) {
 
 	r.Get("/", dr.GetAllOrders)
 	r.Get("/{uuid}", dr.GetOrderByUUID)
-	r.Get("/{uuid}/create", dr.CreateOrder)
+	r.Post("/create", dr.CreateOrder)
 	r.Post("/edit", dr.EditOrder)
 }
 
@@ -107,7 +107,7 @@ func (dr *deliveryRoutes) EditOrder(w http.ResponseWriter, r *http.Request) {
 	order, err := dr.s.UpdateOrderByUUID(r.Context(), orderIn.Id, status)
 	if err != nil {
 		errRender := render.Render(w, r, web.ErrRender(err))
-		log.Println("No order obtained")
+		log.Println("No order edited")
 		if errRender != nil {
 			log.Println("Render error")
 			return
@@ -120,20 +120,22 @@ func (dr *deliveryRoutes) EditOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (dr *deliveryRoutes) CreateOrder(w http.ResponseWriter, r *http.Request) {
-	uuid, err := uuid.Parse(chi.URLParam(r, "uuid"))
+	var orderIn orderChangeRequest
+	err := json.NewDecoder(r.Body).Decode(&orderIn)
 	if err != nil {
 		errRender := render.Render(w, r, web.ErrRender(err))
-		log.Println("Incorrect uuid")
+		log.Println("JSON parse error")
 		if errRender != nil {
 			log.Println("Render error")
 			return
 		}
 		return
 	}
-	order, err := dr.s.CreateOrder(r.Context(), uuid)
+
+	order, err := dr.s.CreateOrder(r.Context(), orderIn.Id)
 	if err != nil {
 		errRender := render.Render(w, r, web.ErrRender(err))
-		log.Println("No order obtained")
+		log.Println("No order created")
 		if errRender != nil {
 			log.Println("Render error")
 			return
