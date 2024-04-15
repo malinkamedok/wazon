@@ -52,3 +52,12 @@ CREATE TABLE product_cart (
                              PRIMARY KEY (cartID, productID)
 );
 
+
+CREATE TYPE status_enum AS ENUM ('created', 'prepare', 'delivery', 'await', 'received');
+
+create table if not exists orders (
+    id uuid not null default uuid_generate_v4() unique,
+    order_status status_enum not null default 'created',
+    created_at timestamp not null default now(),
+    updated_at timestamp not null default now()
+);
