@@ -1,13 +1,12 @@
 package config
 
 import (
-	"log"
-
 	"github.com/caarlos0/env/v7"
+	"log"
 )
 
 type Config struct {
-	Port        string `env:"PORT" envDefault:"8082"`
+	Port        string `env:"PORT" envDefault:"8000"`
 	PostgresUrl string `env:"POSTGRES_URL"`
 }
 
