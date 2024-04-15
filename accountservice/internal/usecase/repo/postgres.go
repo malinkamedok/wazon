@@ -25,6 +25,10 @@ func (postgres PostgresRepo) GetUserById(ctx context.Context, userId int) (entit
 	}
 	log.Println(query)
 	rows, err := postgres.Pool.Query(ctx, query, args...)
+	if err != nil {
+		log.Println("could not execute query")
+		return entity.User{}, err
+	}
 	var user entity.User
 	defer rows.Close()
 	rows.Next()
