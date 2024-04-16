@@ -12,17 +12,17 @@ CREATE SCHEMA IF NOT EXISTS accountservice;
 SET search_path TO accountservice;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE user_account (
-                              userID SERIAL PRIMARY KEY,
+                              id uuid default public.uuid_generate_v4() PRIMARY KEY,
                               name varchar(100),
                               surname varchar(100),
                               login varchar(100),
                               password varchar(100),
-                              FOREIGN KEY (userID) REFERENCES user_account (userID)
+                              FOREIGN KEY (id) REFERENCES user_account (id)
 );
 
 CREATE TABLE cart (
-                      cartID SERIAL PRIMARY KEY,
-                      userID int REFERENCES user_account (userID)
+                      id uuid default public.uuid_generate_v4() PRIMARY KEY,
+                      userID uuid REFERENCES user_account (id)
 );
 
 CREATE TABLE product (
@@ -31,23 +31,23 @@ CREATE TABLE product (
                          description varchar(255),
                          price int
 );
-
+CREATE TYPE status_enum AS ENUM ('created', 'prepare', 'delivery', 'await', 'received');
 CREATE TABLE u_order (
-                           orderID SERIAL PRIMARY KEY,
-                           userID int REFERENCES user_account (userID),
-                           orderState varchar(100),
+                           id uuid PRIMARY KEY,
+                           userID uuid REFERENCES user_account (id),
+                           order_status status_enum not null,
                            createdAt timestamp with time zone DEFAULT current_timestamp,
                            updatedAt timestamp with time zone DEFAULT current_timestamp
 );
 
 CREATE TABLE product_order (
-                              productOrderID SERIAL PRIMARY KEY,
-                              productID uuid REFERENCES product (id),
-                              orderID int REFERENCES u_order (orderID)
+                               productID uuid REFERENCES product (id),
+                               orderID uuid REFERENCES u_order (id),
+                               PRIMARY KEY (productID, orderID)
 );
 
 CREATE TABLE product_cart (
-                             cartID SERIAL REFERENCES cart (cartID),
+                             cartID uuid REFERENCES cart (id),
                              productID uuid REFERENCES product (id),
                              PRIMARY KEY (cartID, productID)
 );
@@ -58,7 +58,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE status_enum AS ENUM ('created', 'prepare', 'delivery', 'await', 'received');
 
 create table if not exists orders (
-    id uuid not null default public.uuid_generate_v4() unique,
+    id uuid default public.uuid_generate_v4() PRIMARY KEY,
     order_status status_enum not null default 'created',
     created_at timestamp not null default now(),
     updated_at timestamp not null default now()

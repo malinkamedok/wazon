@@ -1,6 +1,7 @@
-package integration
+package storefrontrest
 
 import (
+	"accountservice/internal/config"
 	"accountservice/internal/entity"
 	"encoding/json"
 	"io"
@@ -8,8 +9,17 @@ import (
 	"net/http"
 )
 
-func GetAllProducts() entity.Products {
-	url := "http://localhost:8082/storefront/" //TODO как это достать из конфига?
+type StorefrontRest struct {
+	cfg *config.Config
+}
+
+func NewStorefrontRest(cfg *config.Config) *StorefrontRest {
+	return &StorefrontRest{cfg}
+}
+
+func (sr StorefrontRest) GetAllProducts() entity.Products {
+	url := sr.cfg.StorefrontUrl
+	log.Println(url)
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("accept", "application/json")
 	res, _ := http.DefaultClient.Do(req)
@@ -25,7 +35,7 @@ func GetAllProducts() entity.Products {
 }
 
 //func GetUniqueProduct() entity.Products {
-//	url := "http://localhost:8082/storefront/" //TODO как это достать из конфига?
+//	url := "http://localhost:8082/storefront/"
 //	req, _ := http.NewRequest("GET", url, nil)
 //	req.Header.Add("accept", "application/json")
 //	res, _ := http.DefaultClient.Do(req)

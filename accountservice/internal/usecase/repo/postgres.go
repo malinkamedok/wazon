@@ -6,6 +6,7 @@ import (
 	"accountservice/pkg/postgres"
 	"context"
 	"github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
 	"log"
 )
 
@@ -13,11 +14,11 @@ type PostgresRepo struct {
 	*postgres.Postgres
 }
 
-func (postgres PostgresRepo) GetUserById(ctx context.Context, userId int) (entity.User, error) {
+func (postgres PostgresRepo) GetUserById(ctx context.Context, userId uuid.UUID) (entity.User, error) {
 	query, args, err := postgres.Builder.
-		Select("UserID", "Name", "Surname", "login").
+		Select("id", "Name", "Surname", "login").
 		From("accountservice.user_account").
-		Where(squirrel.Eq{"UserID": userId}).
+		Where(squirrel.Eq{"id": userId}).
 		ToSql()
 	if err != nil {
 		log.Println("could not build query")
@@ -54,13 +55,13 @@ func (postgres PostgresRepo) InsertOrUpdateProduct(ctx context.Context, product 
 	return nil
 }
 
-func (p PostgresRepo) GetAllProducts(ctx context.Context, userId int64) ([]entity.Product, error) {
+func (postgres PostgresRepo) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error) {
 	query := "SELECT p.id, p.name, p.description, p.price FROM accountservice.product p " +
 		"JOIN accountservice.product_cart pc ON p.id = pc.productID " +
-		"JOIN accountservice.cart c ON pc.cartID = c.cartID " +
-		"JOIN accountservice.user_account ua ON c.userID = ua.userID " +
-		"WHERE ua.userID = $1;"
-	rows, err := p.Pool.Query(ctx, query, userId)
+		"JOIN accountservice.cart c ON pc.cartID = c.id " +
+		"JOIN accountservice.user_account ua ON c.userID = ua.id " +
+		"WHERE ua.id = $1;"
+	rows, err := postgres.Pool.Query(ctx, query, userId)
 	if err != nil {
 		log.Println("could not execute query")
 		return nil, err

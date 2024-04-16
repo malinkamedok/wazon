@@ -5,6 +5,7 @@ import (
 	v1 "accountservice/internal/controller/v1"
 	"accountservice/internal/usecase"
 	"accountservice/internal/usecase/repo"
+	storefrontrest "accountservice/internal/usecase/storefrontRest"
 	"accountservice/pkg/httpserver"
 	"accountservice/pkg/postgres"
 	"github.com/go-chi/chi/v5"
@@ -24,9 +25,11 @@ func Run(cfg *config.Config) {
 
 	s := usecase.NewStorefrontUseCase(repo.NewPostgresRepo(pg))
 
+	r := usecase.NewIntegrationUsecase(storefrontrest.NewStorefrontRest(cfg))
+
 	handler := chi.NewRouter()
 
-	v1.NewRouter(handler, s)
+	v1.NewRouter(handler, s, r)
 
 	server := httpserver.New(handler, httpserver.Port(cfg.Port))
 	interruption := make(chan os.Signal, 1)

@@ -21,10 +21,14 @@ func (useCase AccountServiceUseCase) GetProductByUUID(ctx context.Context, produ
 	panic("implement me")
 }
 
+func (useCase AccountServiceUseCase) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error) {
+	return useCase.repo.GetAllProductsFromCart(ctx, userId)
+}
+
 func (useCase AccountServiceUseCase) InsertOrUpdateProduct(ctx context.Context, product entity.Product) error {
 	return useCase.repo.InsertOrUpdateProduct(ctx, product)
 }
 
-func (useCase AccountServiceUseCase) GetUserById(ctx context.Context, userId int) (entity.User, error) {
+func (useCase AccountServiceUseCase) GetUserById(ctx context.Context, userId uuid.UUID) (entity.User, error) {
 	return useCase.repo.GetUserById(ctx, userId)
 }
