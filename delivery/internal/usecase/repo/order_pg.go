@@ -69,7 +69,7 @@ func ReadOneObjectFromRows(rows pgx.Rows) (entity.Order, error) {
 }
 
 func (p *PostgresRepo) ReadOrderByUUID(ctx context.Context, orderUUID uuid.UUID) (entity.Order, error) {
-	query, _, err := p.Builder.Select("*").From("orders").Where("id = $1").ToSql()
+	query, _, err := p.Builder.Select("*").From("order_service.orders").Where("id = $1").ToSql()
 
 	if err != nil {
 		log.Println("could not build query")
@@ -98,7 +98,7 @@ func (p *PostgresRepo) InsertOrder(ctx context.Context, orderUUID uuid.UUID) (en
 		return entity.Order{}, fmt.Errorf("order with UUID %s already exists", orderUUID)
 	}
 
-	query, _, err := p.Builder.Insert("orders").Columns("id").Values(orderUUID.String()).Suffix("RETURNING *").ToSql()
+	query, _, err := p.Builder.Insert("order_service.orders").Columns("id").Values(orderUUID.String()).Suffix("RETURNING *").ToSql()
 
 	if err != nil {
 		log.Println("could not build query")
@@ -127,7 +127,7 @@ func (p *PostgresRepo) UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUI
 		return entity.Order{}, fmt.Errorf("order with UUID %s does not exist yet", orderUUID)
 	}
 
-	query, _, err := p.Builder.Update("orders").Set("order_status", Status).Set("updated_at", time.Now()).Where("id = $3", orderUUID).Suffix("RETURNING *").ToSql()
+	query, _, err := p.Builder.Update("order_service.orders").Set("order_status", Status).Set("updated_at", time.Now()).Where("id = $3", orderUUID).Suffix("RETURNING *").ToSql()
 
 	if err != nil {
 		log.Println("could not build query")
@@ -148,7 +148,7 @@ func (p *PostgresRepo) UpdateOrderByUUID(ctx context.Context, orderUUID uuid.UUI
 
 func (p *PostgresRepo) CheckOrderExistance(ctx context.Context, orderUUID uuid.UUID) (bool, error) {
 	var exists bool
-	query, _, err := p.Builder.Select("1").Prefix("SELECT EXISTS (").From("orders").Where("id = $1", orderUUID).Suffix(")").ToSql()
+	query, _, err := p.Builder.Select("1").Prefix("SELECT EXISTS (").From("order_service.orders").Where("id = $1", orderUUID).Suffix(")").ToSql()
 
 	if err != nil {
 		log.Println("could not build query")
