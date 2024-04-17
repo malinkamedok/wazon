@@ -20,7 +20,7 @@ func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
 }
 
 func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList, error) {
-	query, _, err := p.Builder.Select("id", "name").From("products").ToSql()
+	query, _, err := p.Builder.Select("id", "name").From("productcard.products").ToSql()
 	if err != nil {
 		log.Println("could not build query")
 		return nil, err

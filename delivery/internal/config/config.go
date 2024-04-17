@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Port        string `env:"PORT" envDefault:"8082"`
+	Port        string `env:"PORT" envDefault:"8001"`
 	PostgresUrl string `env:"POSTGRES_URL"`
 }
 
