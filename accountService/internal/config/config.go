@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	Port          string `env:"PORT" envDefault:"8000"`
-	PostgresUrl   string `env:"POSTGRES_URL"`
-	StorefrontUrl string `env:"STOREFRONT_URL" envDefault:"http://localhost:8082" `
+	Port           string `env:"ACCOUNT_PORT" envDefault:"8002"`
+	PostgresUrl    string `env:"WAZON_DB_URL"`
+	StorefrontUrl  string `env:"STOREFRONT_URL" envDefault:"http://storefront:"`
+	StoreFrontPort string `env:"STOREFRONT_PORT" envDefault:"8000"`
 }
 
 func NewConfig() (*Config, error) {

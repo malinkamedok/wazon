@@ -94,7 +94,15 @@ func (routes *accountServiceRoutes) CreateProduct(w http.ResponseWriter, r *http
 }
 
 func (routes *accountServiceRoutes) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	product := routes.rest.GetAllProducts()
+	product, err := routes.rest.GetAllProducts()
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
 	product.Service = "accountService"
 	render.JSON(w, r, product)
 }

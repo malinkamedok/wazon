@@ -13,7 +13,7 @@ func NewIntegrationUsecase(rest *storefrontrest.StorefrontRest) *IntegrationUsec
 	return &IntegrationUsecase{rest: rest}
 }
 
-func (i IntegrationUsecase) GetAllProducts() entity.Products {
+func (i IntegrationUsecase) GetAllProducts() (entity.Products, error) {
 	return i.rest.GetAllProducts()
 }
 

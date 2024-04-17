@@ -20,10 +20,10 @@ type (
 	}
 
 	IntegrationRest interface {
-		GetAllProducts() entity.Products
+		GetAllProducts() (entity.Products, error)
 	}
 
 	IntegrationContract interface {
-		GetAllProducts() entity.Products
+		GetAllProducts() (entity.Products, error)
 	}
 )
