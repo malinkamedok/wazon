@@ -57,12 +57,12 @@ func (routes *accountServiceRoutes) GetUserById(w http.ResponseWriter, r *http.R
 		}
 		return
 	}
-	response := userResponse{User: user, Service: "accountservice"}
+	response := userResponse{User: user, Service: "accountService"}
 	render.JSON(w, r, response)
 }
 
 func (routes *accountServiceRoutes) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	response := "accountservice alive!"
+	response := "accountService alive!"
 	render.JSON(w, r, response)
 }
 
@@ -89,13 +89,13 @@ func (routes *accountServiceRoutes) CreateProduct(w http.ResponseWriter, r *http
 		}
 		return
 	}
-	response := createProductResponse{Product: product, Service: "accountservice"}
+	response := createProductResponse{Product: product, Service: "accountService"}
 	render.JSON(w, r, response)
 }
 
 func (routes *accountServiceRoutes) GetAllProducts(w http.ResponseWriter, r *http.Request) {
 	product := routes.rest.GetAllProducts()
-	product.Service = "accountservice"
+	product.Service = "accountService"
 	render.JSON(w, r, product)
 }
 
@@ -114,6 +114,6 @@ func (routes *accountServiceRoutes) GetAllProductsFromCart(w http.ResponseWriter
 		}
 		return
 	}
-	response := productsResponse{Products: product, Service: "accountservice"}
+	response := productsResponse{Products: product, Service: "accountService"}
 	render.JSON(w, r, response)
 }

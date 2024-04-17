@@ -17,7 +17,7 @@ type PostgresRepo struct {
 func (postgres PostgresRepo) GetUserById(ctx context.Context, userId uuid.UUID) (entity.User, error) {
 	query, args, err := postgres.Builder.
 		Select("id", "Name", "Surname", "login").
-		From("accountservice.user_account").
+		From("accountService.user_account").
 		Where(squirrel.Eq{"id": userId}).
 		ToSql()
 	if err != nil {
@@ -43,7 +43,7 @@ func (postgres PostgresRepo) GetUserById(ctx context.Context, userId uuid.UUID) 
 }
 
 func (postgres PostgresRepo) InsertOrUpdateProduct(ctx context.Context, product entity.Product) error {
-	query := "Insert into accountservice.product values ($1, $2, $3, $4) " +
+	query := "Insert into accountService.product values ($1, $2, $3, $4) " +
 		"on conflict (id) do update set name = EXCLUDED.name, description = EXCLUDED.description, price = EXCLUDED.price"
 	log.Println(query)
 	_, err := postgres.Pool.Exec(ctx, query, product.Id, product.Name, product.Description, product.Price)
@@ -56,10 +56,10 @@ func (postgres PostgresRepo) InsertOrUpdateProduct(ctx context.Context, product 
 }
 
 func (postgres PostgresRepo) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error) {
-	query := "SELECT p.id, p.name, p.description, p.price FROM accountservice.product p " +
-		"JOIN accountservice.product_cart pc ON p.id = pc.productID " +
-		"JOIN accountservice.cart c ON pc.cartID = c.id " +
-		"JOIN accountservice.user_account ua ON c.userID = ua.id " +
+	query := "SELECT p.id, p.name, p.description, p.price FROM accountService.product p " +
+		"JOIN accountService.product_cart pc ON p.id = pc.productID " +
+		"JOIN accountService.cart c ON pc.cartID = c.id " +
+		"JOIN accountService.user_account ua ON c.userID = ua.id " +
 		"WHERE ua.id = $1;"
 	rows, err := postgres.Pool.Query(ctx, query, userId)
 	if err != nil {

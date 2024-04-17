@@ -43,3 +43,18 @@ services:
       PORT: ${PORT-8001}
     env_file:
       - .env
+  account:
+    build:
+      context: ./accountService
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "${ACCOUNT_PORT-8002}:${ACCOUNT_PORT-8002}"
+    depends_on:
+      psql:
+        condition: service_started
+    environment:
+      POSTGRES_URL: ${WAZON_DB_URL}
+      PORT: ${PORT-8002}
+    env_file:
+      - .env
