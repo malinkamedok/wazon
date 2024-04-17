@@ -1,7 +1,8 @@
 package config
 
 import (
-	"log"
+	"go.uber.org/zap"
+	"storefront/pkg/logger"
 
 	"github.com/caarlos0/env/v7"
 )
@@ -15,7 +16,7 @@ func NewConfig() (*Config, error) {
 	cfg := &Config{}
 	err := env.Parse(cfg)
 	if err != nil {
-		log.Println("Error in parsing env")
+		logger.Error("error in parsing env", zap.Error(err))
 		return nil, err
 	}
 	return cfg, nil

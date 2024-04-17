@@ -3,9 +3,10 @@ package repo
 import (
 	"context"
 	"github.com/google/uuid"
-	"log"
+	"go.uber.org/zap"
 	"storefront/internal/entity"
 	"storefront/internal/usecase"
+	"storefront/pkg/logger"
 	"storefront/pkg/postgres"
 )
 
@@ -22,12 +23,12 @@ func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
 func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList, error) {
 	query, _, err := p.Builder.Select("id", "name").From("productcard.products").ToSql()
 	if err != nil {
-		log.Println("could not build query")
+		logger.Error("could not build query", zap.Error(err))
 		return nil, err
 	}
 	rows, err := p.Pool.Query(ctx, query)
 	if err != nil {
-		log.Println("could not execute query")
+		logger.Error("could not execute query", zap.Error(err))
 		return nil, err
 	}
 
@@ -38,13 +39,13 @@ func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList
 		var product entity.ProductList
 		err = rows.Scan(&product.UUID, &product.Name)
 		if err != nil {
-			log.Println("could not scan row")
+			logger.Error("could not scan row", zap.Error(err))
 			return nil, err
 		}
 		products = append(products, product)
 	}
 	if rows.Err() != nil {
-		log.Println("could not read rows")
+		logger.Error("could not read rows", zap.Error(rows.Err()))
 		return nil, err
 	}
 	return products, nil
@@ -53,12 +54,12 @@ func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList
 func (p PostgresRepo) ReadProductByUUID(ctx context.Context, productUUID uuid.UUID) (entity.Product, error) {
 	query, _, err := p.Builder.Select("*").From("products").Where("id=?", productUUID).ToSql()
 	if err != nil {
-		log.Println("could not build query")
+		logger.Error("could not build query", zap.Error(err))
 		return entity.Product{}, err
 	}
 	rows, err := p.Pool.Query(ctx, query, productUUID)
 	if err != nil {
-		log.Println("could not execute query")
+		logger.Error("could not execute query", zap.Error(err))
 		return entity.Product{}, err
 	}
 
@@ -68,12 +69,12 @@ func (p PostgresRepo) ReadProductByUUID(ctx context.Context, productUUID uuid.UU
 	for rows.Next() {
 		err = rows.Scan(&product.UUID, &product.Name, &product.Description, &product.Price)
 		if err != nil {
-			log.Println("could not scan row")
+			logger.Error("could not scan row", zap.Error(err))
 			return entity.Product{}, err
 		}
 	}
 	if rows.Err() != nil {
-		log.Println("could not read rows")
+		logger.Error("could not read rows", zap.Error(rows.Err()))
 		return entity.Product{}, err
 	}
 	return product, nil
