@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "c85e496e-7c22-496d-8c8c-f35dd955bd9f",
+		"name": "wazon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24394459"
+	},
+	"item": [
+		{
+			"name": "accountService",
+			"item": [
+				{
+					"name": "user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uuid\": \"21167535-5b55-4cf7-a92d-4a24317932ab\",\r\n  \"name\": \"biba\",\r\n  \"price\": 36,\r\n  \"description\": \"aboba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/accountservice/user/31167546-5b55-4cf7-a92d-4a24317934bb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"user",
+								"31167546-5b55-4cf7-a92d-4a24317934bb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "healthCheck",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uuid\": \"21167535-5b55-4cf7-a92d-4a24317932ab\",\r\n  \"name\": \"biba\",\r\n  \"price\": 36,\r\n  \"description\": \"aboba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/accountservice/healthCheck",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"healthCheck"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8002/accountservice/getAllProducts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"getAllProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cart/user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uuid\": \"21167535-5b55-4cf7-a92d-4a24317932ab\",\r\n  \"name\": \"biba\",\r\n  \"price\": 36,\r\n  \"description\": \"aboba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/accountservice/cart/user/31167546-5b55-4cf7-a92d-4a24317934bb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"accountservice",
+								"cart",
+								"user",
+								"31167546-5b55-4cf7-a92d-4a24317934bb"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "storefrontService",
+			"item": [
+				{
+					"name": "getAllProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/storefront/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"storefront",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "deliveryService",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/delivery/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"delivery",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
