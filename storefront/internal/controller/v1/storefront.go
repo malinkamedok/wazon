@@ -19,11 +19,16 @@ type allProductsResponse struct {
 	Service  string               `json:"service"`
 }
 
+type productResponse struct {
+	Product entity.Product `json:"product"`
+	Service string         `json:"service"`
+}
+
 func NewUserRoutes(r chi.Router, s usecase.StorefrontContract) {
 	sr := &storefrontRoutes{s: s}
 
 	r.Get("/", sr.GetAllProducts)
-	r.Get("/{}", sr.GetProductByUUID)
+	r.Get("/{uuid}", sr.GetProductByUUID)
 }
 
 func (sr *storefrontRoutes) GetAllProducts(w http.ResponseWriter, r *http.Request) {
@@ -40,4 +45,17 @@ func (sr *storefrontRoutes) GetAllProducts(w http.ResponseWriter, r *http.Reques
 	render.JSON(w, r, response)
 }
 
-func (sr *storefrontRoutes) GetProductByUUID(w http.ResponseWriter, r *http.Request) {}
+func (sr *storefrontRoutes) GetProductByUUID(w http.ResponseWriter, r *http.Request) {
+	productID := chi.URLParam(r, "uuid")
+	product, err := sr.s.GetProductByUUID(r.Context(), productID)
+	if err != nil {
+		err := render.Render(w, r, web.ErrRender(err))
+		if err != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+	response := productResponse{Product: product, Service: "storefront"}
+	render.JSON(w, r, response)
+}

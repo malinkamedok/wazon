@@ -40,6 +40,7 @@ CREATE TABLE u_order (
                            updatedAt timestamp with time zone DEFAULT current_timestamp
 );
 
+
 CREATE TABLE product_order (
                                productID uuid REFERENCES product (id),
                                orderID uuid REFERENCES u_order (id),

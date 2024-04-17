@@ -9,7 +9,7 @@ import (
 type (
 	StorefrontContract interface {
 		GetAllProducts(ctx context.Context) ([]entity.ProductList, error)
-		GetProductByUUID(ctx context.Context, productUUID uuid.UUID) (entity.Product, error)
+		GetProductByUUID(ctx context.Context, productUUID string) (entity.Product, error)
 	}
 
 	StorefrontRepository interface {

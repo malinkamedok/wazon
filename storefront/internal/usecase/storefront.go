@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"github.com/google/uuid"
+	"log"
 	"storefront/internal/entity"
 )
 
@@ -24,7 +25,15 @@ func (s StorefrontUseCase) GetAllProducts(ctx context.Context) ([]entity.Product
 	return products, nil
 }
 
-func (s StorefrontUseCase) GetProductByUUID(ctx context.Context, productUUID uuid.UUID) (entity.Product, error) {
-	//TODO implement me
-	panic("implement me")
+func (s StorefrontUseCase) GetProductByUUID(ctx context.Context, productIDStr string) (entity.Product, error) {
+	productUUID, err := uuid.Parse(productIDStr)
+	if err != nil {
+		log.Println("could not parse product uuid")
+		return entity.Product{}, err
+	}
+	product, err := s.repo.ReadProductByUUID(ctx, productUUID)
+	if err != nil {
+		return entity.Product{}, err
+	}
+	return product, nil
 }
