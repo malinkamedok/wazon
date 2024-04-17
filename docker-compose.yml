@@ -5,7 +5,7 @@ services:
     image: postgres:15
     container_name: 'psql'
     ports:
-      - '5432:5432' # For debug, drop in prod
+      - "${POSTGRES_PORT-5432}:${POSTGRES_PORT-5432}"
     volumes:
       - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
@@ -19,12 +19,13 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     ports:
-      - '8000:8000'
+      - "${STOREFRONT_PORT-8000}:${STOREFRONT_PORT-8000}"
     depends_on:
       psql:
         condition: service_started
     environment:
       POSTGRES_URL: ${WAZON_DB_URL}
+      PORT: ${PORT-8000}
     env_file:
       - .env
   delivery:
@@ -33,11 +34,12 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     ports:
-      - '8001:8001'
+      - "${DELIVERY_PORT-8001}:${DELIVERY_PORT-8001}"
     depends_on:
       psql:
         condition: service_started
     environment:
       POSTGRES_URL: ${WAZON_DB_URL}
+      PORT: ${PORT-8001}
     env_file:
       - .env
