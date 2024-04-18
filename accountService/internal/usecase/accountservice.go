@@ -32,3 +32,7 @@ func (useCase AccountServiceUseCase) InsertOrUpdateProduct(ctx context.Context, 
 func (useCase AccountServiceUseCase) GetUserById(ctx context.Context, userId uuid.UUID) (entity.User, error) {
 	return useCase.repo.GetUserById(ctx, userId)
 }
+
+func (useCase AccountServiceUseCase) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error) {
+	return useCase.repo.CreateUser(ctx, user)
+}

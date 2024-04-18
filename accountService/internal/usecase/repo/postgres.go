@@ -14,6 +14,12 @@ type PostgresRepo struct {
 	*postgres.Postgres
 }
 
+var _ usecase.AccountServiceRepository = (*PostgresRepo)(nil)
+
+func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
+	return &PostgresRepo{pg}
+}
+
 func (postgres PostgresRepo) GetUserById(ctx context.Context, userId uuid.UUID) (entity.User, error) {
 	query, args, err := postgres.Builder.
 		Select("id", "Name", "Surname", "login").
@@ -45,7 +51,6 @@ func (postgres PostgresRepo) GetUserById(ctx context.Context, userId uuid.UUID) 
 func (postgres PostgresRepo) InsertOrUpdateProduct(ctx context.Context, product entity.Product) error {
 	query := "Insert into accountService.product values ($1, $2, $3, $4) " +
 		"on conflict (id) do update set name = EXCLUDED.name, description = EXCLUDED.description, price = EXCLUDED.price"
-	log.Println(query)
 	_, err := postgres.Pool.Exec(ctx, query, product.Id, product.Name, product.Description, product.Price)
 	if err != nil {
 		log.Println("could not execute query")
@@ -86,8 +91,28 @@ func (postgres PostgresRepo) GetAllProductsFromCart(ctx context.Context, userId 
 	return products, nil
 }
 
-var _ usecase.AccountServiceRepository = (*PostgresRepo)(nil)
+func (postgres PostgresRepo) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error) {
+	query, _, err := postgres.Builder.Insert("accountservice.user_account").Columns("Name", "Surname", "login").Values(user.Name, user.SurName, user.Login).Suffix("RETURNING accountservice.user_account.id").ToSql()
+	if err != nil {
+		log.Println("could not build query")
+		return uuid.Nil, err
+	}
 
-func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
-	return &PostgresRepo{pg}
+	rows, err := postgres.Pool.Query(ctx, query, user.Name, user.SurName, user.Login)
+	if err != nil {
+		log.Println("could not execute query")
+		return uuid.Nil, err
+	}
+	defer rows.Close()
+
+	var userId uuid.UUID
+	for rows.Next() {
+		err = rows.Scan(&userId)
+		if err != nil {
+			log.Println("could not scan row")
+			return uuid.Nil, err
+		}
+	}
+
+	return userId, err
 }

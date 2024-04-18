@@ -40,6 +40,36 @@ func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, r
 	router.Get("/getAllProducts", route.GetAllProducts)
 	router.Get("/cart/user/{id}", route.GetAllProductsFromCart)
 	router.Post("/product", route.CreateProduct)
+	router.Post("/create/user", route.CreateUser)
+}
+
+func (routes *accountServiceRoutes) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var user entity.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("JSON parse error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	userId, err := routes.service.CreateUser(r.Context(), user)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("JSON parse error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	user.Id = userId
+	resp := userResponse{User: user, Service: "accountService"}
+	render.JSON(w, r, resp)
 }
 
 func (routes *accountServiceRoutes) GetUserById(w http.ResponseWriter, r *http.Request) {
