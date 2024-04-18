@@ -159,6 +159,10 @@ func (postgres PostgresRepo) CreateCart(ctx context.Context, userId uuid.UUID) (
 
 func (postgres PostgresRepo) CheckCartExists(ctx context.Context, userId uuid.UUID) (uuid.UUID, error) {
 	query, _, err := postgres.Builder.Select("id").From("accountservice.cart").Where(squirrel.Eq{"userID": userId}).ToSql()
+	if err != nil {
+		log.Println("could not build query")
+		return uuid.Nil, err
+	}
 
 	rows, err := postgres.Pool.Query(ctx, query, userId)
 	if err != nil {
