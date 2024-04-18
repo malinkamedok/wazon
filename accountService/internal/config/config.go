@@ -10,6 +10,8 @@ type Config struct {
 	PostgresUrl    string `env:"WAZON_DB_URL"`
 	StorefrontUrl  string `env:"STOREFRONT_URL" envDefault:"http://storefront:"`
 	StoreFrontPort string `env:"STOREFRONT_PORT" envDefault:"8000"`
+	DeliveryUrl    string `env:"DELIVERY_URL" envDefault:"http://delivery:"`
+	DeliveryPort   string `env:"DELIVERY_PORT" envDefault:"8001"`
 }
 
 func NewConfig() (*Config, error) {

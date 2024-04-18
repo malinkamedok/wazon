@@ -42,6 +42,7 @@ func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, r
 	router.Post("/product", route.CreateProduct)
 	router.Post("/create/user", route.CreateUser)
 	router.Post("/add/productToCart", route.AddProductToUserCart)
+	router.Get("/createOrder/{id}", route.CreateOrder)
 }
 
 func (routes *accountServiceRoutes) AddProductToUserCart(w http.ResponseWriter, r *http.Request) {
@@ -180,4 +181,21 @@ func (routes *accountServiceRoutes) GetAllProductsFromCart(w http.ResponseWriter
 	}
 	response := productsResponse{Products: product, Service: "accountService"}
 	render.JSON(w, r, response)
+}
+
+func (routes *accountServiceRoutes) CreateOrder(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	var order entity.Order
+	order, err := routes.rest.CreateOrder(id)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("create order error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	render.JSON(w, r, order)
 }

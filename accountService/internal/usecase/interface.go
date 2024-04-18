@@ -28,9 +28,11 @@ type (
 
 	IntegrationRest interface {
 		GetAllProducts() (entity.Products, error)
+		CreateOrder(uuid uuid.UUID) (entity.Order, error)
 	}
 
 	IntegrationContract interface {
 		GetAllProducts() (entity.Products, error)
+		CreateOrder(uuid string) (entity.Order, error)
 	}
 )
