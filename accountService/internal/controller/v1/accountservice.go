@@ -28,8 +28,8 @@ type createProductResponse struct {
 }
 
 type productsResponse struct {
-	Products []entity.Product `json:"product"`
-	Service  string           `json:"service"`
+	Products []uuid.UUID `json:"product"`
+	Service  string      `json:"service"`
 }
 
 func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, rest usecase.IntegrationContract) {

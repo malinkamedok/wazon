@@ -60,24 +60,23 @@ func (postgres PostgresRepo) InsertOrUpdateProduct(ctx context.Context, product 
 	return nil
 }
 
-func (postgres PostgresRepo) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error) {
-	query := "SELECT p.id, p.name, p.description, p.price FROM accountService.product p " +
-		"JOIN accountService.product_cart pc ON p.id = pc.productID " +
-		"JOIN accountService.cart c ON pc.cartID = c.id " +
-		"JOIN accountService.user_account ua ON c.userID = ua.id " +
-		"WHERE ua.id = $1;"
+func (postgres PostgresRepo) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]uuid.UUID, error) {
+	query := "select productID from accountservice.product_cart " +
+		"join accountservice.cart on product_cart.cartID = cart.id " +
+		"where cart.userID = $1;"
+
 	rows, err := postgres.Pool.Query(ctx, query, userId)
 	if err != nil {
 		log.Println("could not execute query")
 		return nil, err
 	}
 
-	var products []entity.Product
+	var products []uuid.UUID
 
 	defer rows.Close()
 	for rows.Next() {
-		var product entity.Product
-		err = rows.Scan(&product.Id, &product.Name, &product.Description, &product.Price)
+		var product uuid.UUID
+		err = rows.Scan(&product)
 		if err != nil {
 			log.Println("could not scan row")
 			return nil, err

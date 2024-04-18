@@ -22,7 +22,7 @@ func (useCase AccountServiceUseCase) GetProductByUUID(ctx context.Context, produ
 	panic("implement me")
 }
 
-func (useCase AccountServiceUseCase) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error) {
+func (useCase AccountServiceUseCase) GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]uuid.UUID, error) {
 	return useCase.repo.GetAllProductsFromCart(ctx, userId)
 }
 
