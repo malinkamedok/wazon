@@ -4,6 +4,7 @@ import (
 	"accountservice/internal/entity"
 	"context"
 	"github.com/google/uuid"
+	"log"
 )
 
 type AccountServiceUseCase struct {
@@ -35,4 +36,40 @@ func (useCase AccountServiceUseCase) GetUserById(ctx context.Context, userId uui
 
 func (useCase AccountServiceUseCase) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error) {
 	return useCase.repo.CreateUser(ctx, user)
+}
+
+func (useCase AccountServiceUseCase) AddProductToCart(ctx context.Context, userId string, productId string) error {
+	userUUID, err := uuid.Parse(userId)
+	if err != nil {
+		log.Println("error in parsing user uuid", err)
+		return err
+	}
+
+	productUUID, err := uuid.Parse(productId)
+	if err != nil {
+		log.Println("error in parsing product uuid", err)
+		return err
+	}
+
+	cartID, err := useCase.repo.CheckCartExists(ctx, userUUID)
+	if err != nil {
+		return err
+	}
+
+	var newCartID uuid.UUID
+	if cartID == uuid.Nil {
+		newCartID, err = useCase.repo.CreateCart(ctx, userUUID)
+		if err != nil {
+			return err
+		}
+	} else {
+		newCartID = cartID
+	}
+
+	err = useCase.repo.AddProductToCart(ctx, newCartID, productUUID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

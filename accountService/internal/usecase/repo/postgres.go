@@ -116,3 +116,66 @@ func (postgres PostgresRepo) CreateUser(ctx context.Context, user entity.User) (
 
 	return userId, err
 }
+
+func (postgres PostgresRepo) AddProductToCart(ctx context.Context, cartID uuid.UUID, productId uuid.UUID) error {
+	query, _, err := postgres.Builder.Insert("accountservice.product_cart").Columns("cartID", "productID").Values(cartID, productId).ToSql()
+	if err != nil {
+		log.Println("could not build query")
+		return err
+	}
+
+	_, err = postgres.Pool.Exec(ctx, query, cartID, productId)
+	if err != nil {
+		log.Println("could not execute query")
+		return err
+	}
+
+	return nil
+}
+
+func (postgres PostgresRepo) CreateCart(ctx context.Context, userId uuid.UUID) (uuid.UUID, error) {
+	query, _, err := postgres.Builder.Insert("accountservice.cart").Columns("userID").Values(userId).Suffix("RETURNING accountservice.cart.id").ToSql()
+	if err != nil {
+		log.Println("could not build query")
+		return uuid.Nil, err
+	}
+
+	rows, err := postgres.Pool.Query(ctx, query, userId)
+	if err != nil {
+		log.Println("could not execute query")
+		return uuid.Nil, err
+	}
+	defer rows.Close()
+
+	var cartId uuid.UUID
+	for rows.Next() {
+		err = rows.Scan(&cartId)
+		if err != nil {
+			log.Println("could not scan row")
+			return uuid.Nil, err
+		}
+	}
+	return cartId, nil
+}
+
+func (postgres PostgresRepo) CheckCartExists(ctx context.Context, userId uuid.UUID) (uuid.UUID, error) {
+	query, _, err := postgres.Builder.Select("id").From("accountservice.cart").Where(squirrel.Eq{"userID": userId}).ToSql()
+
+	rows, err := postgres.Pool.Query(ctx, query, userId)
+	if err != nil {
+		log.Println("could not execute query")
+		return uuid.Nil, err
+	}
+	defer rows.Close()
+
+	var cartID uuid.UUID
+	for rows.Next() {
+		err = rows.Scan(&cartID)
+		if err != nil {
+			log.Println("could not scan row")
+			return uuid.Nil, err
+		}
+	}
+
+	return cartID, nil
+}

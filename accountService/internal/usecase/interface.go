@@ -12,6 +12,7 @@ type (
 		InsertOrUpdateProduct(ctx context.Context, product entity.Product) error
 		GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error)
 		CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error)
+		AddProductToCart(ctx context.Context, userId string, productId string) error
 	}
 
 	AccountServiceRepository interface {
@@ -19,6 +20,10 @@ type (
 		InsertOrUpdateProduct(ctx context.Context, product entity.Product) error
 		GetAllProductsFromCart(ctx context.Context, userId uuid.UUID) ([]entity.Product, error)
 		CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error)
+
+		AddProductToCart(ctx context.Context, cartID uuid.UUID, productId uuid.UUID) error
+		CreateCart(ctx context.Context, userId uuid.UUID) (uuid.UUID, error)
+		CheckCartExists(ctx context.Context, userId uuid.UUID) (uuid.UUID, error)
 	}
 
 	IntegrationRest interface {

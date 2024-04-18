@@ -41,6 +41,32 @@ func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, r
 	router.Get("/cart/user/{id}", route.GetAllProductsFromCart)
 	router.Post("/product", route.CreateProduct)
 	router.Post("/create/user", route.CreateUser)
+	router.Post("/add/productToCart", route.AddProductToUserCart)
+}
+
+func (routes *accountServiceRoutes) AddProductToUserCart(w http.ResponseWriter, r *http.Request) {
+	var ptcReq entity.ProductToCartRequest
+	err := json.NewDecoder(r.Body).Decode(&ptcReq)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("JSON parse error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	err = routes.service.AddProductToCart(r.Context(), ptcReq.UserID, ptcReq.ProductID)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("add product to cart error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
 }
 
 func (routes *accountServiceRoutes) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +85,7 @@ func (routes *accountServiceRoutes) CreateUser(w http.ResponseWriter, r *http.Re
 	userId, err := routes.service.CreateUser(r.Context(), user)
 	if err != nil {
 		errRender := render.Render(w, r, web.ErrRender(err))
-		log.Println("JSON parse error")
+		log.Println("create user error")
 		if errRender != nil {
 			log.Println("Render error")
 			return

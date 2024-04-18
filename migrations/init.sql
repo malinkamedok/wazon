@@ -49,7 +49,7 @@ CREATE TABLE product_order (
 
 CREATE TABLE product_cart (
                              cartID uuid REFERENCES cart (id),
-                             productID uuid REFERENCES product (id),
+                             productID uuid,
                              PRIMARY KEY (cartID, productID)
 );
 
