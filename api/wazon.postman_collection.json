@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8002/accountservice/user/31167546-5b55-4cf7-a92d-4a24317934bb",
+							"raw": "http://localhost:8002/accountservice/user/ca78db5c-fd9f-4418-86c0-18fc0ccc5577",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -24,7 +24,7 @@
 							"path": [
 								"accountservice",
 								"user",
-								"31167546-5b55-4cf7-a92d-4a24317934bb"
+								"ca78db5c-fd9f-4418-86c0-18fc0ccc5577"
 							]
 						}
 					},
@@ -92,7 +92,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"uuid\": \"21167535-5b55-4cf7-a92d-4a24317932ab\",\r\n  \"name\": \"biba\",\r\n  \"price\": 36,\r\n  \"description\": \"aboba\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +100,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8002/accountservice/cart/user/31167546-5b55-4cf7-a92d-4a24317934bb",
+							"raw": "http://localhost:8002/accountservice/cart/user/5d2122dc-f09d-4833-9808-3a9f4e152bd7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -110,7 +110,100 @@
 								"accountservice",
 								"cart",
 								"user",
-								"31167546-5b55-4cf7-a92d-4a24317934bb"
+								"5d2122dc-f09d-4833-9808-3a9f4e152bd7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"penis\",\n    \"surname\": \"detrov\",\n    \"login\": \"valery54\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/accountservice/create/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"create",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addProductToCart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userID\": \"15ecdb2a-5a3e-42a9-b173-cbc9a5855dbb\",\n    \"productID\": \"530993a8-e3bd-4659-917b-88b0be5a666f\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/accountservice/add/productToCart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"add",
+								"productToCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createOrder",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/accountservice/createOrder/0d39d5a6-ca6d-4ef2-b477-621e1b37e528",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"accountservice",
+								"createOrder",
+								"0d39d5a6-ca6d-4ef2-b477-621e1b37e528"
 							]
 						}
 					},
@@ -208,15 +301,12 @@
 				},
 				{
 					"name": "createOrder",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"uuid\": \"530993a8-e3bd-4659-917b-88b0be5a666f\",\n    \"status\": \"create\"\n}",
+							"raw": "{\n    \"uuid\": \"0d39d5a6-ca6d-4ef2-b477-621e1b37e524\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
