@@ -10,22 +10,10 @@
 			"name": "accountService",
 			"item": [
 				{
-					"name": "user",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "getUser",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"uuid\": \"21167535-5b55-4cf7-a92d-4a24317932ab\",\r\n  \"name\": \"biba\",\r\n  \"price\": 36,\r\n  \"description\": \"aboba\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "http://localhost:8002/accountservice/user/31167546-5b55-4cf7-a92d-4a24317934bb",
 							"protocol": "http",
@@ -112,12 +100,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/accountservice/cart/user/31167546-5b55-4cf7-a92d-4a24317934bb",
+							"raw": "http://localhost:8002/accountservice/cart/user/31167546-5b55-4cf7-a92d-4a24317934bb",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8081",
+							"port": "8002",
 							"path": [
 								"accountservice",
 								"cart",
@@ -152,6 +140,26 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/storefront/530993a8-e3bd-4659-917b-88b0be5a666f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"storefront",
+								"530993a8-e3bd-4659-917b-88b0be5a666f"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -159,7 +167,7 @@
 			"name": "deliveryService",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "getAllOrders",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -173,6 +181,90 @@
 							"path": [
 								"delivery",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOrder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8001/delivery/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"delivery",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createOrder",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"530993a8-e3bd-4659-917b-88b0be5a666f\",\n    \"status\": \"create\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/delivery/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"delivery",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateOrder",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"530993a8-e3bd-4659-917b-88b0be5a666f\",\n    \"status\": \"create\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8001/delivery/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"delivery",
+								"update"
 							]
 						}
 					},

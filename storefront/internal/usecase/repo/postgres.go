@@ -52,7 +52,7 @@ func (p PostgresRepo) ReadAllProducts(ctx context.Context) ([]entity.ProductList
 }
 
 func (p PostgresRepo) ReadProductByUUID(ctx context.Context, productUUID uuid.UUID) (entity.Product, error) {
-	query, _, err := p.Builder.Select("*").From("products").Where("id=?", productUUID).ToSql()
+	query, _, err := p.Builder.Select("*").From("productcard.products").Where("id=?", productUUID).ToSql()
 	if err != nil {
 		logger.Error("could not build query", zap.Error(err))
 		return entity.Product{}, err

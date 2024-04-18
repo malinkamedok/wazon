@@ -24,7 +24,7 @@ func NewPostgresRepo(pg *postgres.Postgres) *PostgresRepo {
 }
 
 func (p *PostgresRepo) ReadAllOrders(ctx context.Context) ([]entity.OrderList, error) {
-	query, _, err := p.Builder.Select("id", "order_status").From("orders").ToSql()
+	query, _, err := p.Builder.Select("id", "order_status").From("order_service.orders").ToSql()
 	if err != nil {
 		log.Println("could not build query")
 		return nil, err
