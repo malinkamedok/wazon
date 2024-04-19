@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/cors"
 )
 
-func NewRouter(handler *chi.Mux, s usecase.DeliveryContract) {
+func NewRouter(handler *chi.Mux, s usecase.DeliveryContract, m usecase.DeliveryMQContract) {
 	handler.Route("/delivery", func(r chi.Router) {
 		r.Use(cors.Handler(cors.Options{
 			AllowedOrigins:   []string{"https://*", "http://*"},
@@ -16,6 +16,6 @@ func NewRouter(handler *chi.Mux, s usecase.DeliveryContract) {
 			AllowCredentials: true,
 			MaxAge:           300,
 		}))
-		NewUserRoutes(r, s)
+		NewUserRoutes(r, s, m)
 	})
 }

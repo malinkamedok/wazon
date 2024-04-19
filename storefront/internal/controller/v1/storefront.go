@@ -3,10 +3,11 @@ package v1
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"storefront/internal/entity"
 	"storefront/internal/usecase"
+	"storefront/pkg/logger"
 	"storefront/pkg/web"
 )
 
@@ -32,11 +33,12 @@ func NewUserRoutes(r chi.Router, s usecase.StorefrontContract) {
 }
 
 func (sr *storefrontRoutes) GetAllProducts(w http.ResponseWriter, r *http.Request) {
+	logger.Info("got getAllProducts request")
 	products, err := sr.s.GetAllProducts(r.Context())
 	if err != nil {
 		err := render.Render(w, r, web.ErrRender(err))
 		if err != nil {
-			log.Println("Render error")
+			logger.Error("render error", zap.Error(err))
 			return
 		}
 		return
@@ -46,12 +48,13 @@ func (sr *storefrontRoutes) GetAllProducts(w http.ResponseWriter, r *http.Reques
 }
 
 func (sr *storefrontRoutes) GetProductByUUID(w http.ResponseWriter, r *http.Request) {
+	logger.Info("got GetProductByUUID request")
 	productID := chi.URLParam(r, "uuid")
 	product, err := sr.s.GetProductByUUID(r.Context(), productID)
 	if err != nil {
 		err := render.Render(w, r, web.ErrRender(err))
 		if err != nil {
-			log.Println("Render error")
+			logger.Error("render error", zap.Error(err))
 			return
 		}
 		return

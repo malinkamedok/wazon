@@ -3,8 +3,9 @@ package usecase
 import (
 	"context"
 	"github.com/google/uuid"
-	"log"
+	"go.uber.org/zap"
 	"storefront/internal/entity"
+	"storefront/pkg/logger"
 )
 
 type StorefrontUseCase struct {
@@ -28,7 +29,7 @@ func (s StorefrontUseCase) GetAllProducts(ctx context.Context) ([]entity.Product
 func (s StorefrontUseCase) GetProductByUUID(ctx context.Context, productIDStr string) (entity.Product, error) {
 	productUUID, err := uuid.Parse(productIDStr)
 	if err != nil {
-		log.Println("could not parse product uuid")
+		logger.Error("could not parse product uuid", zap.Error(err))
 		return entity.Product{}, err
 	}
 	product, err := s.repo.ReadProductByUUID(ctx, productUUID)

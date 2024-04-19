@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/go-chi/chi/v5"
-	"log"
+	"go.uber.org/zap"
 	"os"
 	"os/signal"
 	"storefront/internal/config"
@@ -10,15 +10,18 @@ import (
 	"storefront/internal/usecase"
 	"storefront/internal/usecase/repo"
 	"storefront/pkg/httpserver"
+	"storefront/pkg/logger"
 	"storefront/pkg/postgres"
 	"syscall"
 )
 
 func Run(cfg *config.Config) {
 
+	logger.InitLogger()
+
 	pg, err := postgres.New(cfg)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal("postgres connection error", zap.Error(err))
 		return
 	}
 
@@ -31,17 +34,17 @@ func Run(cfg *config.Config) {
 	server := httpserver.New(handler, httpserver.Port(cfg.Port))
 	interruption := make(chan os.Signal, 1)
 	signal.Notify(interruption, os.Interrupt, syscall.SIGTERM)
-	log.Printf("server started")
+	logger.Info("storefront server started", zap.String("port", cfg.Port))
 
 	select {
 	case s := <-interruption:
-		log.Printf("signal: " + s.String())
+		logger.Warn("Interruption channel: ", zap.String("notification", s.String()))
 	case err := <-server.Notify():
-		log.Printf("Notify from http server: %s\n", err)
+		logger.Warn("Server notify channel: ", zap.Error(err))
 	}
 
 	err = server.Shutdown()
 	if err != nil {
-		log.Printf("Http server shutdown")
+		logger.Error("Error shutting down server: ", zap.Error(err))
 	}
 }

@@ -25,4 +25,12 @@ type (
 
 		CheckOrderExistance(ctx context.Context, orderUUID uuid.UUID) (bool, error)
 	}
+
+	DeliveryMQContract interface {
+		SendOrderUpdateMessage(ctx context.Context, orderID string, status string) error
+	}
+
+	DeliveryMQ interface {
+		SendOrderUpdateMessage(ctx context.Context, orderUUID uuid.UUID, status string) error
+	}
 )

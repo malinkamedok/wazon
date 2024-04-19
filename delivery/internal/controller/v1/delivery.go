@@ -14,6 +14,7 @@ import (
 
 type deliveryRoutes struct {
 	s usecase.DeliveryContract
+	m usecase.DeliveryMQContract
 }
 
 type allOrdersResponse struct {
@@ -31,8 +32,8 @@ type orderChangeRequest struct {
 	NewStatus string `json:"status"`
 }
 
-func NewUserRoutes(r chi.Router, s usecase.DeliveryContract) {
-	dr := &deliveryRoutes{s: s}
+func NewUserRoutes(r chi.Router, s usecase.DeliveryContract, m usecase.DeliveryMQContract) {
+	dr := &deliveryRoutes{s: s, m: m}
 
 	r.Get("/", dr.GetAllOrders)
 	r.Get("/{uuid}", dr.GetOrderByUUID)
@@ -92,6 +93,18 @@ func (dr *deliveryRoutes) EditOrder(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
+	err = dr.m.SendOrderUpdateMessage(r.Context(), orderIn.Id, orderIn.NewStatus)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("No order status update send to queue")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
 	response := orderResponse{Order: order, Service: "delivery"}
 	render.JSON(w, r, response)
 

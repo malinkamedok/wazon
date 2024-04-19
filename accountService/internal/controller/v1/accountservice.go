@@ -28,8 +28,8 @@ type createProductResponse struct {
 }
 
 type productsResponse struct {
-	Products []entity.Product `json:"product"`
-	Service  string           `json:"service"`
+	Products []uuid.UUID `json:"product"`
+	Service  string      `json:"service"`
 }
 
 func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, rest usecase.IntegrationContract) {
@@ -40,6 +40,63 @@ func NewUserRoutes(router chi.Router, contract usecase.AccountServiceContract, r
 	router.Get("/getAllProducts", route.GetAllProducts)
 	router.Get("/cart/user/{id}", route.GetAllProductsFromCart)
 	router.Post("/product", route.CreateProduct)
+	router.Post("/create/user", route.CreateUser)
+	router.Post("/add/productToCart", route.AddProductToUserCart)
+	router.Get("/createOrder/{id}", route.CreateOrder)
+}
+
+func (routes *accountServiceRoutes) AddProductToUserCart(w http.ResponseWriter, r *http.Request) {
+	var ptcReq entity.ProductToCartRequest
+	err := json.NewDecoder(r.Body).Decode(&ptcReq)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("JSON parse error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	err = routes.service.AddProductToCart(r.Context(), ptcReq.UserID, ptcReq.ProductID)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("add product to cart error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+}
+
+func (routes *accountServiceRoutes) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var user entity.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("JSON parse error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	userId, err := routes.service.CreateUser(r.Context(), user)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("create user error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	user.Id = userId
+	resp := userResponse{User: user, Service: "accountService"}
+	render.JSON(w, r, resp)
 }
 
 func (routes *accountServiceRoutes) GetUserById(w http.ResponseWriter, r *http.Request) {
@@ -57,12 +114,12 @@ func (routes *accountServiceRoutes) GetUserById(w http.ResponseWriter, r *http.R
 		}
 		return
 	}
-	response := userResponse{User: user, Service: "accountservice"}
+	response := userResponse{User: user, Service: "accountService"}
 	render.JSON(w, r, response)
 }
 
 func (routes *accountServiceRoutes) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	response := "accountservice alive!"
+	response := "accountService alive!"
 	render.JSON(w, r, response)
 }
 
@@ -89,13 +146,21 @@ func (routes *accountServiceRoutes) CreateProduct(w http.ResponseWriter, r *http
 		}
 		return
 	}
-	response := createProductResponse{Product: product, Service: "accountservice"}
+	response := createProductResponse{Product: product, Service: "accountService"}
 	render.JSON(w, r, response)
 }
 
 func (routes *accountServiceRoutes) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	product := routes.rest.GetAllProducts()
-	product.Service = "accountservice"
+	product, err := routes.rest.GetAllProducts()
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+	product.Service = "accountService"
 	render.JSON(w, r, product)
 }
 
@@ -114,6 +179,23 @@ func (routes *accountServiceRoutes) GetAllProductsFromCart(w http.ResponseWriter
 		}
 		return
 	}
-	response := productsResponse{Products: product, Service: "accountservice"}
+	response := productsResponse{Products: product, Service: "accountService"}
 	render.JSON(w, r, response)
+}
+
+func (routes *accountServiceRoutes) CreateOrder(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	var order entity.Order
+	order, err := routes.rest.CreateOrder(id)
+	if err != nil {
+		errRender := render.Render(w, r, web.ErrRender(err))
+		log.Println("create order error")
+		if errRender != nil {
+			log.Println("Render error")
+			return
+		}
+		return
+	}
+
+	render.JSON(w, r, order)
 }
