@@ -27,7 +27,7 @@ type (
 	}
 
 	DeliveryMQContract interface {
-		SendOrderUpdateMessage(ctx context.Context, orderUUID string, status string) error
+		SendOrderUpdateMessage(ctx context.Context, orderID string, status string) error
 	}
 
 	DeliveryMQ interface {
