@@ -82,3 +82,16 @@ services:
       PORT: ${PORT-8002}
     env_file:
       - .env
+  cronjob:
+    build:
+      context: ./cronjob
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      delivery:
+        condition: service_started
+    environment:
+      DELIVERY_PORT: ${DELIVERY_PORT-8001}
+      WAIT_BETWEEN_UPDATES_SEC: ${WAIT_BETWEEN_UPDATES_SEC-1}
+    env_file:
+      - .env
